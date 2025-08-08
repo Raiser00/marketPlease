@@ -23,5 +23,5 @@ exports.signup = async (req, res) => {
     await sendEmail(email, 'Bienvenue sur MarketPlease', `Clique ici pour valider ton inscription : http://localhost:3000/verify/${token}`);
 
     return res.status(201).json({
-        message: 'Inscription réussi. ' });
+        message: 'Inscription réussi. Vérifier votre boite mail. ' });
 };
