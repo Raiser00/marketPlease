@@ -25,3 +25,14 @@ exports.signup = async (req, res) => {
     return res.status(201).json({
         message: 'Inscription réussi. Vérifier votre boite mail. ' });
 };
+
+exports.verify = async (req, res) => {
+    const { token} = req.params;
+    try {
+        const { id } = jwt.verify(token, process.env.JWT_SECRET);
+        await User.findByIdAndUpdate(id, { verified: true });
+        res.status(200).json({ message: 'Compte vérifié avec succès' });
+    } catch (e) {
+        res.status(400).json({ message: 'Token invalide ou expiré' });
+    }
+};
