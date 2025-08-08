@@ -36,3 +36,18 @@ exports.verify = async (req, res) => {
         res.status(400).json({ message: 'Token invalide ou expiré' });
     }
 };
+
+exports.login = async (req, res) => {
+    const { email, password } = req.body;
+    const user = await User.findOne({ email });
+    if (!user || !user.verified) 
+        {
+        return res.status(400).json({ message: 'Email ou mot de passe incorrect' });
+    }
+
+    const valid = await bcrypt.compare(password, user.passwordHash);
+    if (!valid) return res.status(400).json({ message: 'Email ou mot de passe incorrect' });
+
+    const token = jwt.sign({ id:user._id, role: user.role }, process.env.JWT_SECRET, { expiresIn: '1h' });
+    res.json({ token });
+};
