@@ -8,3 +8,13 @@ const transporter = nodemailer.createTransport({
         pass: process.env.MAILTRAP_PASS
     }
 });
+
+module.exports = async function sendEmail(to, subject, html) {
+await transporter.sendMail({
+    from: '"MarketPlease" <noreply@marketplease.com>',
+    to,
+    subject,
+    html
+});
+};
+
