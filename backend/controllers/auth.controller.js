@@ -51,3 +51,27 @@ exports.login = async (req, res) => {
     const token = jwt.sign({ id:user._id, role: user.role }, process.env.JWT_SECRET, { expiresIn: '1h' });
     res.json({ token });
 };
+
+exports.forgotPassword = async (req, res) => {
+    const { email } = req.body;
+    const user = await User.findOne({ email });
+    if (!user) return res.status(400).json({ message: 'User introuvable' });
+
+    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '15m' });
+    await sendEmail(email, 'Réinitialisation de mot de passe', `Clique ici pour réinitialiser ton mot de passe : http://localhost:3000/reset/${token}`);
+
+    res.json({ message: 'Email de réinitialisation envoyé' });
+};
+
+exports.resetPassword = async (req, res) => {
+    const { token } = req.params;
+    const { password } = req.body;
+    try {
+        const { id } = jwt.verify(token, process.env.JWT_SECRET);
+        const passwordHash = await bcrypt.hash(password, 10);
+        await User.findByIdAndUpdate(id, { passwordHash });
+        res.json({ message: 'Mot de passe réinitialisé avec succès' });
+    } catch (e) {
+        res.status(400).json({ message: 'Token invalide ou expiré' });
+    }
+};
