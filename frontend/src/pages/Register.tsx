@@ -4,12 +4,7 @@ import api from '../services/api';
 
 export default function Register() {
     const form = useForm({
-        initialValues: {
-            firstName: '',
-            lastName: '',
-            email: '',
-            phone: '',
-            password: '',
+        initialValues: { firstName: '', lastName: '', email: '', phone: '', password: '',
         });
 
         const handleSubmit = async (values: typeof form.values) => {
@@ -24,31 +19,31 @@ export default function Register() {
                 <TextInput
                     label="Prénom"
                     placeholder="Votre prénom"
-                    {...form.getInputProps('firstName')}
+                    {...form.getInputProps('firstName')} required
                 />
                 <TextInput
                     label="Nom"
                     placeholder="Votre nom"
                     mt="md"
-                    {...form.getInputProps('lastName')}
+                    {...form.getInputProps('lastName')} required
                 />
                 <TextInput
                     label="Email"
                     placeholder="Votre email"
                     mt="md"
-                    {...form.getInputProps('email')}
+                    {...form.getInputProps('email')} required
                 />
                 <TextInput
                     label="Téléphone"
                     placeholder="Votre téléphone"
                     mt="md"
-                    {...form.getInputProps('phone')}
+                    {...form.getInputProps('phone')} required
                 />
                 <PasswordInput
                     label="Mot de passe"
                     placeholder="Votre mot de passe"
                     mt="md"
-                    {...form.getInputProps('password')}
+                    {...form.getInputProps('password')} required
                 />
                 <Button fullWidth mt="xl" type="submit">S'inscrire</Button>
             </form>
