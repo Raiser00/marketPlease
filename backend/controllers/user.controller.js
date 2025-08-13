@@ -11,3 +11,7 @@ exports.updateUser = async (req, res) => {
     res.json({ message: 'Utilisateur mis à jour' });
 };
 
+exports.deleteUser = async (req, res) => {
+    await User.findByIdAndDelete(req.params.id);
+    res.json({ message: 'Utilisateur supprime' });
+};
