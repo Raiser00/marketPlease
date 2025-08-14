@@ -5,7 +5,7 @@ import api from '../services/api';
 export default function Register() {
     const form = useForm({
         initialValues: { firstName: '', lastName: '', email: '', phone: '', password: '',
-        });
+        }, });
 
         const handleSubmit = async (values: typeof form.values) => {
             await api.post('/auth/signup', values);
