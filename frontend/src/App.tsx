@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+/* import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Register from "./pages/Register";
 import Login from "./pages/Login";
 import Markets from "./pages/Markets";
@@ -22,6 +22,13 @@ function App() {
         </BrowserRouter>
       </AuthProvider>
     );
+}
+
+export default App; */
+
+
+function App() {
+  return <h1>TEST REACT</h1>;
 }
 
 export default App;
