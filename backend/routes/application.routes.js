@@ -6,6 +6,5 @@ router.post('/:marketId', auth.isUser, ctrl.postuler);
 router.delete('/:id', auth.isUser, ctrl.retirer);
 router.get('/mes-candidatures', auth.isUser, ctrl.mesCandidatures);
 router.put('/:id/accepter', auth.isAdmin, ctrl.attribuer);
-router.get('/applications/for-market/:marketId', auth.isAdmin, ctrl.getApplicationsForMarket);
 
 module.exports = router;
