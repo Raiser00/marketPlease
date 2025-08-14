@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react';
 import { TextInput, Button, Container } from '@mantine/core';
 import { useForm } from '@mantine/form';
 import api from '../services/api';
-import { de } from 'zod/locales';
 
 export default function Profile() {
     const [user, setUser] = useState<any>(null);
