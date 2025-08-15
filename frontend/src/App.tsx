@@ -26,9 +26,19 @@ function App() {
 
 export default App; */
 
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+
 
 function App() {
-  return <h1>TEST REACT</h1>;
+  return (
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<h1>Page d'accueil</h1>} />
+        <Route path="/login" element={<h1>Login</h1>} />
+        <Route path="/admin" element={<h1>Admin Dashboard</h1>} />
+      </Routes>
+    </BrowserRouter>
+  );
 }
 
 export default App;

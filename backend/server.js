@@ -7,7 +7,7 @@ const app = express();
 const port = process.env.PORT || 5000;
 
 app.use(cors());
-app.use(express.json()); // pour parser le JSON des requêtes
+app.use(express.json()); 
 
 const marketRoutes = require('./routes/market.routes');
 app.use('/api/markets', marketRoutes);
