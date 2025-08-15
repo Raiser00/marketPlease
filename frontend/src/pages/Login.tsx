@@ -12,7 +12,7 @@ export default function Login() {
     const handleSubmit = async (values: typeof form.values) => {
         const res = await api.post('/auth/login', values);
         login(res.data.token);
-        navigate('/');
+        navigate('/profile');
 
     };
 
