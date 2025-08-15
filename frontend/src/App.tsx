@@ -7,6 +7,7 @@ import { MantineProvider } from "@mantine/core";
 import AdminDashboard from "./pages/AdminDashboard";
 import MyApplications from "./pages/MyApplications";
 import Profile from "./pages/Profile";
+import HomePage from "./pages/HomePage";
 
 function App() {
     return (
@@ -14,7 +15,7 @@ function App() {
       <AuthProvider>
         <BrowserRouter>
           <Routes>
-            <Route path="/" element={<Markets />} />
+            <Route path="/" element={<HomePage />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
             <Route path="/profile" element={<Profile />} />
