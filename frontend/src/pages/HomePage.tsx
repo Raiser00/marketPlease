@@ -1,8 +1,8 @@
-import { Container, Title, Text, Button, Group } from '@mantine/core';
-import { useNavigate } from 'react-router-dom';
+import { Container, Title, Text } from '@mantine/core';
+
 
 export default function HomePage() {
-    const navigate = useNavigate();
+    
 
     return (
         <Container
@@ -22,14 +22,7 @@ export default function HomePage() {
             <Text size="lg" mb="xl">
                 Gérez vos marchés facilement et rapidement !
             </Text>
-            <Group ps="center" grow={false} style={{ gap: 20}}>
-                <Button onClick={() => navigate('/register')} size="md">
-                    S'inscrire
-                </Button>
-                <Button onClick={() => navigate('/login')} size="md" variant="outline">
-                    Se connecter
-                </Button>
-            </Group>
+            
         </Container>
     );
 }

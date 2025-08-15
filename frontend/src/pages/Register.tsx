@@ -26,7 +26,7 @@ export default function Register() {
 
 
     return (
-    <Container size={420} style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '100vh' }}>
+    <Container size="sm" style={{ textAlign: "center" }}>
       <Paper shadow="xs" p="xl" style={{ width: '100%' }}>
         <Title style={{ textAlign: 'center'}} mb="md">
           {step === 'signup' ? 'Inscription' : 'Vérification'}
