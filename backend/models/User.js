@@ -10,7 +10,8 @@ const userSchema = new mongoose.Schema({
     verified: { type: Boolean, default: false },
     verifyCode: { type: String, default: null },
     verifyCodeExpires: { type: Date, default: null },
-    createdAt: { type: Date, default: Date.now }
+    createdAt: { type: Date, default: Date.now },
+    markets: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Market' }]
 }, { timestamps: true });
 
 module.exports = mongoose.model('User', userSchema);
