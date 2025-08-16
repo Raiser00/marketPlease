@@ -10,11 +10,24 @@ export default function Login() {
     const navigate = useNavigate();
 
     const handleSubmit = async (values: typeof form.values) => {
+    try {
         const res = await api.post('/auth/login', values);
         login(res.data.token);
-        navigate('/profile');
 
-    };
+        const userRes = await api.get('/users/me', {
+            headers: { Authorization: `Bearer ${res.data.token}` }
+        });
+
+        if (userRes.data.role === 'admin') {
+            navigate('/admin');
+        } else {
+            navigate('/profile');
+        }
+    } catch (err: any) {
+        alert(err.response?.data?.message || 'Erreur de connexion');
+    }
+};
+
 
     return (
         <Container size="sm" style={{ textAlign: "center" }}>
