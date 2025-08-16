@@ -19,7 +19,7 @@ export default function AdminDashboard() {
     };
 
     const attribuer = async (appId: string) => {
-        await api.put(`/applications/${appId}/assign`);
+        await api.put(`/applications/${appId}/accepter`);
         alert('Candidature attribuee !');
         setCandidats([]);
 };
