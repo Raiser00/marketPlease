@@ -23,6 +23,21 @@ router.get('/me', auth.isUser, async (req, res) => {
     }
 });
 
+router.delete('/me', auth.isUser, async (req, res) => {
+    try {
+        const user = await User.findByIdAndDelete(req.user.id);
+        if (!user) {
+            return res.status(404).json({ message: 'Utilisateur non trouvé' });
+        }
+        res.json({ message: 'Compte supprimé avec succès' });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Erreur serveur' });
+    }
+});
+
+
+
 // Admin route
 router.get('/', auth.isAdmin, ctrl.getAllUsers);
 router.put('/:id', auth.isAdmin, ctrl.updateUser);
