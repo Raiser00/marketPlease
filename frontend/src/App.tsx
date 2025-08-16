@@ -8,6 +8,7 @@ import AdminDashboard from "./pages/AdminDashboard";
 import MyApplications from "./pages/MyApplications";
 import Profile from "./pages/Profile";
 import HomePage from "./pages/HomePage";
+import Layout from "./components/Layout";
 
 function App() {
     return (
@@ -15,13 +16,16 @@ function App() {
       <AuthProvider>
         <BrowserRouter>
           <Routes>
-            <Route path="/" element={<HomePage />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/register" element={<Register />} />
-            <Route path="/profile" element={<Profile />} />
-            <Route path="/markets" element={<Markets />} />
-            <Route path="/my-applications" element={<MyApplications />} />
-            <Route path="/admin" element={<AdminDashboard />} />
+            {/* toutes les routes passent par Layout */}
+            <Route element={<Layout />}>
+              <Route index element={<HomePage />} />
+              <Route path="/login" element={<Login />} />
+              <Route path="/register" element={<Register />} />
+              <Route path="/profile" element={<Profile />} />
+              <Route path="/markets" element={<Markets />} />
+              <Route path="/my-applications" element={<MyApplications />} />
+              <Route path="/admin" element={<AdminDashboard />} />
+            </Route>
           </Routes>
         </BrowserRouter>
       </AuthProvider>

@@ -1,51 +1,76 @@
 import { useEffect, useState } from 'react';
-import { TextInput, Button, Container } from '@mantine/core';
-import { useForm } from '@mantine/form';
+import { Container, Button, Text, Title, Paper, SimpleGrid, Card, Badge } from '@mantine/core';
 import api from '../services/api';
 
+interface Market {
+  _id: string;
+  title: string;
+  description: string;
+}
+
+interface User {
+  firstName: string;
+  lastName: string;
+  role: string;
+  markets: Market[];
+}
+
 export default function Profile() {
-    const [user, setUser] = useState<any>(null);
+  const [user, setUser] = useState<User | null>(null);
 
-    const form = useForm({
-        initialValues: { firstName: '', lastName: '', phone: '',
-        }, });
+  useEffect(() => {
+    api.get('/users/me').then(res => {
+      setUser(res.data);
+    }).catch(err => {
+      console.error(err);
+    });
+  }, []);
 
-    useEffect(() => {
-        api.get('/users/me').then(res => {
-            setUser(res.data);
-            form.setValues({
-                firstName: res.data.firstName,
-                lastName: res.data.lastName,
-                phone: res.data.phone,
-            });
-        });
-    }, []);
+  const supprimer = async () => {
+    if (confirm('Supprimer votre compte ?')) {
+      await api.delete('/users/me');
+      alert('Compte supprimé avec succès !');
+      localStorage.clear();
+      window.location.href = '/login';
+    }
+  };
 
-    const update = async () => {
-        await api.put('/users/me', form.values);
-        alert('Profil mis à jour !');
-    };
+  if (!user) return null;
 
-    const supprimer = async () => {
-        if (confirm('Supprimer votre compte ?')) {
-            await api.delete('/users/me');
-            alert('Compte supprimé avec succès !');
-            localStorage.clear();
-            window.location.href = '/login';
-        }
-    };
+  return (
+    <Container size="md" style={{ textAlign: 'center' }}>
+      <Paper shadow="md" radius="md" p="xl" mt="lg">
+        <Title order={2} mb="md">Mon compte</Title>
+        
+        <Text size="lg" fw={500}>
+          {user.firstName} {user.lastName}
+        </Text>
+        <Badge 
+          mt="xs" 
+          color={user.role === "admin" ? "red" : "blue"} 
+          size="lg"
+        >
+          {user.role}
+        </Badge>
 
-    return (
-        <Container>
-            <h2>Mon compte</h2>
-            <form onSubmit={form.onSubmit(update)}>
-                <TextInput label="Prénom" placeholder="Votre prénom" {...form.getInputProps('firstName')} required />
-                <TextInput label="Nom" placeholder="Votre nom" mt="md" {...form.getInputProps('lastName')} required />
-                <TextInput label="Téléphone" placeholder="Votre téléphone" mt="md" {...form.getInputProps('phone')} required />
-                <Button type="submit" fullWidth mt="md">Mettre à jour</Button>
-                </form>
-            <Button color="red" fullWidth mt="md" onClick={supprimer}>Supprimer mon compte</Button>
+        <Title order={3} mt="xl" mb="md">Mes marchés attribués</Title>
+        {user.markets.length === 0 ? (
+          <Text c="dimmed">Aucun marché attribué pour le moment.</Text>
+        ) : (
+          <SimpleGrid cols={{ base: 1, sm: 2 }} spacing="lg">
+            {user.markets.map(market => (
+              <Card key={market._id} shadow="sm" radius="md" withBorder>
+                <Title order={4}>{market.title}</Title>
+                <Text size="sm" c="dimmed" mt="xs">{market.description}</Text>
+              </Card>
+            ))}
+          </SimpleGrid>
+        )}
 
-        </Container>
-    );
+        <Button color="red" fullWidth mt="xl" onClick={supprimer}>
+          Supprimer mon compte
+        </Button>
+      </Paper>
+    </Container>
+  );
 }

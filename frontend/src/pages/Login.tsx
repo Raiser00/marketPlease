@@ -17,7 +17,7 @@ export default function Login() {
     };
 
     return (
-        <Container>
+        <Container size="sm" style={{ textAlign: "center" }}>
             <Title>Connexion</Title>
             <form onSubmit={form.onSubmit(handleSubmit)}>
             <TextInput label="Email" placeholder="Votre email" {...form.getInputProps('email')} required />
