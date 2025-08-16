@@ -13,8 +13,8 @@ import Layout from "./components/Layout";
 function App() {
     return (
       <MantineProvider>
+      <BrowserRouter>
       <AuthProvider>
-        <BrowserRouter>
           <Routes>
             {/* toutes les routes passent par Layout */}
             <Route element={<Layout />}>
@@ -27,8 +27,8 @@ function App() {
               <Route path="/admin" element={<AdminDashboard />} />
             </Route>
           </Routes>
+          </AuthProvider>
         </BrowserRouter>
-      </AuthProvider>
       </MantineProvider>
 
     );
