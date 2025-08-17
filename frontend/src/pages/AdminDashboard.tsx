@@ -23,20 +23,6 @@ export default function AdminDashboard() {
         setUsers(u.data);
     };
 
-    // users
-    const deleteUser = async (id: string) => {
-        await api.delete(`/users/${id}`);
-        fetchData();
-    };
-
-    const saveUser = async () => {
-        if (formUser._id) {
-            await api.put(`/users/${formUser._id}`, formUser);
-        }
-        setOpenedUser(false);
-        fetchData();
-    };
-    
 
 
     return (

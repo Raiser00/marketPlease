@@ -19,7 +19,7 @@ export default function Layout() {
         <Group justify="space-between" align="center" h={60} px="md">
           <Group gap="md" align="center">
             <Link to="/">🏠 Accueil</Link>
-            <Link to="/market">🛒 Marchés</Link>
+            <Link to="/markets">🛒 Marchés</Link>
             {token && <Link to="/profile">👤 Profil</Link>}
             {role === "admin" && <Link to="/admin">🛠️ Admin</Link>}
           </Group>
