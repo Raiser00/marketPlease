@@ -23,7 +23,7 @@ export default function AdminDashboard() {
         setUsers(u.data);
     };
 
-    // users
+    // users 
     const deleteUser = async (id: string) => {
         await api.delete(`/users/${id}`);
         fetchData();
