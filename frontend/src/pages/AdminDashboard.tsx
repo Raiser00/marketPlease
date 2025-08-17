@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import api from '../services/api';
-import { Card, Button, Select, TextInput, Modal, Group } from '@mantine/core';
+import { Card, Button, Select, TextInput, Modal, Group, Drawer } from '@mantine/core';
 import { set } from 'zod';
 
 
@@ -118,7 +118,7 @@ export default function AdminDashboard() {
             {/* modal market */}
 
             {/* modal user */}
-            <Modal opened={openedUser} onClose={() => setOpenedUser(false)} title="Modifier l'utilisateur">
+            <Drawer opened={openedUser} onClose={() => setOpenedUser(false)} title="Modifier l'utilisateur">
                 <TextInput
                     label="Prénom"
                     value={formUser.firstName || ''}
@@ -136,10 +136,10 @@ export default function AdminDashboard() {
                 />
                 
                 <Button mt="md" onClick={saveUser}>Enregistrer</Button>
-            </Modal>
+            </Drawer>
 
             {/* modal market */}
-            <Modal opened={openedMarket} onClose={() => setOpenedMarket(false)} title="Modifier le marché">
+            <Drawer opened={openedMarket} onClose={() => setOpenedMarket(false)} title="Modifier le marché">
                 <TextInput
                     label="Nom"
                     value={formMarket.name || ''}
@@ -158,7 +158,7 @@ export default function AdminDashboard() {
                 />
                 
                 <Button mt="md" onClick={saveMarket}>Enregistrer</Button>
-            </Modal>
+            </Drawer>
 
         </>
     );
