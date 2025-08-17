@@ -7,12 +7,15 @@ export default function AdminDashboard() {
     const [users, setUsers] = useState<any[]>([]);
     const [markets, setMarkets] = useState<any[]>([]);
     const [candidats, setCandidats] = useState<any[]>([]);
+    const [selectMarket, setSelectMarket] = useState<string | null>(null);
 
     // modal
     const [openedUser, setOpenedUser] = useState(false);
-    
-    
+    const [openedMarket, setOpenedMarket] = useState(false);
+
+    // form states
     const [formUser, setFormUser] = useState<any>({});
+    const [formMarket, setFormMarket] = useState<any>({});
 
     useEffect(() => {
         fetchData();
@@ -21,6 +24,9 @@ export default function AdminDashboard() {
     const fetchData = async () => {
         const u = await api.get('/users');
         setUsers(u.data);
+
+        const m = await api.get('/markets');
+        setMarkets(m.data);
     };
 
     // users
@@ -37,6 +43,22 @@ export default function AdminDashboard() {
         fetchData();
     };
 
+    // markets
+    const deleteMarket = async (id: string) => {
+        await api.delete(`/markets/${id}`);
+        fetchData();
+    };
+
+    const saveMarket = async () => {
+        if (formMarket._id) {
+            await api.put(`/markets/${formMarket._id}`, formMarket);
+        } else {
+            await api.post('/markets', formMarket);
+        }
+        setOpenedMarket(false);
+        fetchData();
+    };
+
     return (
         <>
             <h2>Utilisateurs</h2>
@@ -49,6 +71,20 @@ export default function AdminDashboard() {
                     </Group>
                 </Card>
             ))}
+
+            <h2>Marchés</h2>
+            <Button mt="md" onClick={() => { setFormMarket({}); setOpenedMarket(true); }}>Ajouter un marché</Button>
+            {markets.map((m) => (
+                <Card key={m._id} mt="md" shadow='sm'>
+                    <b>{m.name}</b> - {m.description} ({m.status})
+                    <Group mt="sm">
+                        <Button size="xs" onClick={() => { setFormMarket(m); setOpenedMarket(true); }}>Modifier</Button>
+                        <Button size="xs" color="red" onClick={() => deleteMarket(m._id)}>Supprimer</Button>
+                    </Group>
+                </Card>
+            ))}
+
+            {/* modal market */}
 
             {/* modal user */}
             <Modal opened={openedUser} onClose={() => setOpenedUser(false)} title="Modifier l'utilisateur">
@@ -69,6 +105,28 @@ export default function AdminDashboard() {
                 />
                 
                 <Button mt="md" onClick={saveUser}>Enregistrer</Button>
+            </Modal>
+
+            {/* modal market */}
+            <Modal opened={openedMarket} onClose={() => setOpenedMarket(false)} title="Modifier le marché">
+                <TextInput
+                    label="Nom"
+                    value={formMarket.name || ''}
+                    onChange={(e) => setFormMarket({ ...formMarket, name: e.target.value })}
+                />
+                <TextInput
+                    label="Description"
+                    value={formMarket.description || ''}
+                    onChange={(e) => setFormMarket({ ...formMarket, description: e.target.value })}
+                />
+                <Select
+                    label="Statut"
+                    data={['Ouvert', 'Fermé']}
+                    value={formMarket.status || ''}
+                    onChange={(value) => setFormMarket({ ...formMarket, status: value })}
+                />
+                
+                <Button mt="md" onClick={saveMarket}>Enregistrer</Button>
             </Modal>
 
         </>
