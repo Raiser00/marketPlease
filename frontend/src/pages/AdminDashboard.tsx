@@ -1,13 +1,14 @@
 import { useEffect, useState } from 'react';
 import api from '../services/api';
 import { Card, Button, Select, TextInput, Modal, Group } from '@mantine/core';
+import { set } from 'zod';
 
 
 export default function AdminDashboard() {
     const [users, setUsers] = useState<any[]>([]);
     const [markets, setMarkets] = useState<any[]>([]);
     const [candidats, setCandidats] = useState<any[]>([]);
-    const [selectMarket, setSelectMarket] = useState<string | null>(null);
+    const [selectedMarket, setSelectMarket] = useState<string | null>(null);
 
     // modal
     const [openedUser, setOpenedUser] = useState(false);
@@ -59,6 +60,20 @@ export default function AdminDashboard() {
         fetchData();
     };
 
+    // application (candidatures)
+    const voirCandidats = async (marketId: string) => {
+        setSelectMarket(marketId);
+        const res = await api.get(`/applications/for-market/${marketId}`);
+        setCandidats(res.data);
+    };
+
+    const attribuer = async (appId: string) => {
+        await api.put(`/applications/${appId}/accepter`);
+        alert('Candidature acceptée');
+        setCandidats([]);
+        setSelectMarket(null);
+    }
+
     return (
         <>
             <h2>Utilisateurs</h2>
@@ -81,6 +96,22 @@ export default function AdminDashboard() {
                         <Button size="xs" onClick={() => { setFormMarket(m); setOpenedMarket(true); }}>Modifier</Button>
                         <Button size="xs" color="red" onClick={() => deleteMarket(m._id)}>Supprimer</Button>
                     </Group>
+                </Card>
+            ))}
+
+            <h2>Candidatures</h2>
+            <Select 
+                data={markets.map((m) => ({ value: m._id, label: m.name}))}
+                placeholder="Selectionner un marché"
+                value={selectedMarket}
+                onChange={(id) => voirCandidats(id!)}
+            />
+            {candidats.map((app) => (
+                <Card key={app._id} mt="md" shadow="sm">
+                    {app.userId?.firstName} {app.userId?.lastName} - {app.status}
+                    <Button color="green" mt="md" onClick={() => attribuer(app._id)}>
+                        Attribuer
+                    </Button>
                 </Card>
             ))}
 
