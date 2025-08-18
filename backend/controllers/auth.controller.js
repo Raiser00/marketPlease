@@ -83,7 +83,8 @@ exports.forgotPassword = async (req, res) => {
     if (!user) return res.status(400).json({ message: 'User introuvable' });
 
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '15m' });
-    await sendEmail(email, 'Réinitialisation de mot de passe', `Clique ici pour réinitialiser ton mot de passe : http://localhost:3000/reset/${token}`);
+    const resetLink = `http://localhost:5173/reset-password/${token}`;
+    await sendEmail(email, 'Réinitialisation de mot de passe', `Clique ici pour réinitialiser ton mot de passe : <a href="${resetLink}">${resetLink}</a>`);
 
     res.json({ message: 'Email de réinitialisation envoyé' });
 };
