@@ -18,61 +18,113 @@ export default function AdminDashboard() {
     const [formUser, setFormUser] = useState<any>({});
     const [formMarket, setFormMarket] = useState<any>({});
 
+    const token = localStorage.getItem("token");
+
     useEffect(() => {
         fetchData();
     }, []);
 
     const fetchData = async () => {
-        const u = await api.get('/users');
-        setUsers(u.data);
+    try {
+      const u = await api.get('/users', {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      setUsers(u.data);
 
-        const m = await api.get('/markets');
-        setMarkets(m.data);
-    };
+      const m = await api.get('/markets', {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      setMarkets(m.data);
+    } catch (err) {
+      console.error("Erreur fetchData :", err);
+    }
+  };
 
     // users
     const deleteUser = async (id: string) => {
-        await api.delete(`/users/${id}`);
-        fetchData();
-    };
+    try {
+      await api.delete(`/users/${id}`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      fetchData();
+    } catch (err) {
+      console.error("Erreur suppression utilisateur :", err);
+    }
+  };
 
     const saveUser = async () => {
-        if (formUser._id) {
-            await api.put(`/users/${formUser._id}`, formUser);
-        }
-        setOpenedUser(false);
-        fetchData();
-    };
+    try {
+      if (formUser._id) {
+        await api.put(`/users/${formUser._id}`, formUser, {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+      } else {
+        await api.post(`/users`, formUser, {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+      }
+      setOpenedUser(false);
+      fetchData();
+    } catch (err) {
+      console.error("Erreur saveUser :", err);
+    }
+  };
 
     // markets
     const deleteMarket = async (id: string) => {
-        await api.delete(`/markets/${id}`);
-        fetchData();
-    };
-
+    try {
+      await api.delete(`/markets/${id}`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      fetchData();
+    } catch (err) {
+      console.error("Erreur suppression marché :", err);
+    }
+  };
+  
     const saveMarket = async () => {
-        if (formMarket._id) {
-            await api.put(`/markets/${formMarket._id}`, formMarket);
-        } else {
-            await api.post('/markets', formMarket);
-        }
-        setOpenedMarket(false);
-        fetchData();
-    };
+    try {
+      if (formMarket._id) {
+        await api.put(`/markets/${formMarket._id}`, formMarket, {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+      } else {
+        await api.post(`/markets`, formMarket, {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+      }
+      setOpenedMarket(false);
+      fetchData();
+    } catch (err) {
+      console.error("Erreur saveMarket :", err);
+    }
+  };
 
     // application (candidatures)
     const voirCandidats = async (marketId: string) => {
-        setSelectMarket(marketId);
-        const res = await api.get(`/applications/for-market/${marketId}`);
-        setCandidats(res.data);
-    };
+    try {
+      setSelectMarket(marketId);
+      const res = await api.get(`/applications/for-market/${marketId}`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      setCandidats(res.data);
+    } catch (err) {
+      console.error("Erreur voirCandidats :", err);
+    }
+  };
 
     const attribuer = async (appId: string) => {
-        await api.put(`/applications/${appId}/accepter`);
-        alert('Candidature acceptée');
-        setCandidats([]);
-        setSelectMarket(null);
+    try {
+      await api.put(`/applications/${appId}/accepter`, {}, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      alert('Candidature acceptée');
+      setCandidats([]);
+      setSelectMarket(null);
+    } catch (err) {
+      console.error("Erreur attribution candidature :", err);
     }
+  };
 
     return (
         <>
