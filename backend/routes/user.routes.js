@@ -40,7 +40,7 @@ router.delete('/me', auth.isUser, async (req, res) => {
 
 // Admin route
 router.get('/', auth.isAdmin, ctrl.getAllUsers);
-router.put('/:id', auth.isAdmin, ctrl.updateUser);
+router.put('/users/:id', auth.isAdmin, ctrl.updateUser);
 router.delete('/:id', auth.isAdmin, ctrl.deleteUser);
 
 module.exports = router;

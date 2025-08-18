@@ -24,14 +24,23 @@ exports.mesCandidatures = async (req, res) => {
 };
 
 exports.attribuer = async (req, res) => {
-    const { id } = req.params; // Application ID
+    const { id } = req.params;
+    const selected = await Application.findByIdAndUpdate(id, { status: 'Attribuée' }, { new: true });
 
-    const selected = await Application.findByIdAndUpdate(id, { status: 'Attribuée' });
     await Application.updateMany(
         { marketId: selected.marketId, _id: { $ne: id } },
         { status: 'Rejetée' }
     );
 
     await Market.findByIdAndUpdate(selected.marketId, { assignedTo: selected.userId });
-    res.json({ message: 'Candidature attribuée' });
+
+    res.json({ message: 'Candidature attribuée', application: selected });
+};
+
+exports.getByMarket = async (req, res) => {
+    const { marketId } = req.params;
+    const apps = await Application.find({ marketId })
+        .populate('userId', 'firstName lastName email')
+        .populate('marketId', 'name');
+    res.json(apps);
 };

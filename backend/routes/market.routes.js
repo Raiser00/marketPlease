@@ -3,15 +3,6 @@ const ctrl = require('../controllers/market.controller');
 const auth = require('../middlewares/auth');
 const Market = require('../models/Market');
 
-router.get('/', async (req, res) => {
-    try {
-        const markets = await Market.find().sort({ createdAt: -1});
-        res.json(markets);
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ message: 'Erreur serveur' });
-    }
-});
 
 router.post('/:id/apply', auth.isUser, async (req, res) => {
     try {
@@ -41,7 +32,7 @@ router.post('/:id/apply', auth.isUser, async (req, res) => {
 router.post('/', auth.isAdmin, ctrl.create);
 router.get('/', ctrl.getAll);
 router.get('/open', ctrl.getOpen);
-router.put('/:id', auth.isAdmin, ctrl.update);
-router.delete('/:id', auth.isAdmin, ctrl.remove);
+router.put('/markets/:id', auth.isAdmin, ctrl.update);
+router.delete('/markets/:id', auth.isAdmin, ctrl.remove);
 
 module.exports = router;

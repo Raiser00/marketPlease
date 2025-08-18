@@ -1,8 +1,6 @@
 import { useEffect, useState } from 'react';
 import api from '../services/api';
 import { Card, Button, Select, TextInput, Modal, Group, Drawer } from '@mantine/core';
-import { set } from 'zod';
-
 
 export default function AdminDashboard() {
     const [users, setUsers] = useState<any[]>([]);
@@ -81,7 +79,7 @@ export default function AdminDashboard() {
       console.error("Erreur suppression marché :", err);
     }
   };
-  
+
     const saveMarket = async () => {
     try {
       if (formMarket._id) {
@@ -170,7 +168,7 @@ export default function AdminDashboard() {
             {/* modal market */}
 
             {/* modal user */}
-            <Drawer opened={openedUser} onClose={() => setOpenedUser(false)} title="Modifier l'utilisateur">
+            <Modal opened={openedUser} onClose={() => setOpenedUser(false)} title="Modifier l'utilisateur">
                 <TextInput
                     label="Prénom"
                     value={formUser.firstName || ''}
@@ -188,10 +186,10 @@ export default function AdminDashboard() {
                 />
                 
                 <Button mt="md" onClick={saveUser}>Enregistrer</Button>
-            </Drawer>
+            </Modal>
 
             {/* modal market */}
-            <Drawer opened={openedMarket} onClose={() => setOpenedMarket(false)} title="Modifier le marché">
+            <Modal opened={openedMarket} onClose={() => setOpenedMarket(false)} title="Modifier le marché">
                 <TextInput
                     label="Nom"
                     value={formMarket.name || ''}
@@ -210,7 +208,7 @@ export default function AdminDashboard() {
                 />
                 
                 <Button mt="md" onClick={saveMarket}>Enregistrer</Button>
-            </Drawer>
+            </Modal>
 
         </>
     );
