@@ -9,6 +9,8 @@ import MyApplications from "./pages/MyApplications";
 import Profile from "./pages/Profile";
 import HomePage from "./pages/HomePage";
 import Layout from "./components/Layout";
+import ResetPassword from "./pages/ResetPassword";
+import ForgotPassword from "./pages/ForgotPassword";
 
 function App() {
     return (
@@ -25,6 +27,8 @@ function App() {
               <Route path="/markets" element={<Markets />} />
               <Route path="/my-applications" element={<MyApplications />} />
               <Route path="/admin" element={<AdminDashboard />} />
+              <Route path="/reset-password/:token" element={<ResetPassword />} />
+              <Route path="/forgot-password" element={<ForgotPassword />} />
             </Route>
           </Routes>
           </AuthProvider>
