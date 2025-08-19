@@ -19,12 +19,13 @@ export default function Markets() {
             .catch(err => console.error(err));
     }, []);
 
-    const postuler = async (id: string) => {
+    const apply = async (marketId: string) => {
         try {
-        await api.post(`/markets/${id}/apply`);
-        alert('Candidature envoyée avec succès !');
-        } catch (error) {
-            console.error('Erreur lors de la candidature:', error);
+            await api.post(`/applications/${marketId}`);
+            alert('Candidature envoyée avec succès !');
+        } catch (e: any) {
+            console.error('Erreur lors de la candidature:', e);
+            alert(e?.response?.data?.message || "Impossible de postuler");
         }
     };
 
@@ -39,7 +40,7 @@ export default function Markets() {
                     <Text size="xs" c="dimmed">Créé le: {new Date(market.createdAt).toLocaleDateString()}</Text>
                     <Text size="xs" c="dimmed">Date de l'événement: {new Date(market.eventDate).toLocaleDateString()}</Text>
                     <Text size="xs" c="dimmed">Statut: {market.status}</Text>
-                    <Button onClick={() => postuler(market._id)}>Postuler</Button>
+                    <Button onClick={() => apply(market._id)}>Postuler</Button>
                 </Card>
             ))}
             </SimpleGrid>

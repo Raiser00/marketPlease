@@ -35,6 +35,7 @@ export default function AdminDashboard() {
       setMarkets(m.data);
     } catch (err) {
       console.error("Erreur fetchData :", err);
+      alert("Impossible de charger");
     }
   };
 
@@ -44,9 +45,11 @@ export default function AdminDashboard() {
       await api.delete(`/users/${id}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
+      alert("Utilisateur supprimé");
       fetchData();
     } catch (err) {
       console.error("Erreur suppression utilisateur :", err);
+      alert("Erreur lors de la suppression de l'utilisateur");
     }
   };
 
@@ -56,15 +59,18 @@ export default function AdminDashboard() {
         await api.put(`/users/${formUser._id}`, formUser, {
           headers: { Authorization: `Bearer ${token}` }
         });
+        alert("Utilisateur modifié");
       } else {
         await api.post(`/users`, formUser, {
           headers: { Authorization: `Bearer ${token}` }
         });
+        alert("Utilisateur ajouté");
       }
       setOpenedUser(false);
       fetchData();
     } catch (err) {
       console.error("Erreur saveUser :", err);
+      alert("Erreur de l'enregistreement de l'utilisateur");
     }
   };
 
@@ -74,9 +80,11 @@ export default function AdminDashboard() {
       await api.delete(`/markets/${id}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
+      alert("Marché supprimé");
       fetchData();
     } catch (err) {
       console.error("Erreur suppression marché :", err);
+      alert("Erreur lors de la suppression d'un marché");
     }
   };
 
@@ -86,15 +94,18 @@ export default function AdminDashboard() {
         await api.put(`/markets/${formMarket._id}`, formMarket, {
           headers: { Authorization: `Bearer ${token}` }
         });
+        alert("Marché modifié");
       } else {
         await api.post(`/markets`, formMarket, {
           headers: { Authorization: `Bearer ${token}` }
         });
+        alert("MArché ajouté");
       }
       setOpenedMarket(false);
       fetchData();
     } catch (err) {
       console.error("Erreur saveMarket :", err);
+      alert("Erreur lors de l'enregistrement de marché");
     }
   };
 
@@ -108,6 +119,7 @@ export default function AdminDashboard() {
       setCandidats(res.data);
     } catch (err) {
       console.error("Erreur voirCandidats :", err);
+      alert("Impossible de charger les candidatures pour ce marché")
     }
   };
 
@@ -119,8 +131,10 @@ export default function AdminDashboard() {
       alert('Candidature acceptée');
       setCandidats([]);
       setSelectMarket(null);
+      fetchData();
     } catch (err) {
       console.error("Erreur attribution candidature :", err);
+      alert("Erreur lors de l'atribution de la candidature");
     }
   };
 
