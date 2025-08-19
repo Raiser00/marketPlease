@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import api from '../services/api';
 import { Card, Button, Select, TextInput, Modal, Group, Drawer } from '@mantine/core';
 
@@ -10,13 +11,14 @@ export default function AdminDashboard() {
 
     // modal
     const [openedUser, setOpenedUser] = useState(false);
-    const [openedMarket, setOpenedMarket] = useState(false);
+    /* const [openedMarket, setOpenedMarket] = useState(false); */
 
     // form states
     const [formUser, setFormUser] = useState<any>({});
-    const [formMarket, setFormMarket] = useState<any>({});
+    /* const [formMarket, setFormMarket] = useState<any>({}); */
 
     const token = localStorage.getItem("token");
+    const navigate = useNavigate();
 
     useEffect(() => {
         fetchData();
@@ -88,26 +90,7 @@ export default function AdminDashboard() {
     }
   };
 
-    const saveMarket = async () => {
-    try {
-      if (formMarket._id) {
-        await api.put(`/markets/${formMarket._id}`, formMarket, {
-          headers: { Authorization: `Bearer ${token}` }
-        });
-        alert("Marché modifié");
-      } else {
-        await api.post(`/markets`, formMarket, {
-          headers: { Authorization: `Bearer ${token}` }
-        });
-        alert("MArché ajouté");
-      }
-      setOpenedMarket(false);
-      fetchData();
-    } catch (err) {
-      console.error("Erreur saveMarket :", err);
-      alert("Erreur lors de l'enregistrement de marché");
-    }
-  };
+     
 
     // application (candidatures)
     const voirCandidats = async (marketId: string) => {
@@ -152,16 +135,11 @@ export default function AdminDashboard() {
             ))}
 
             <h2>Marchés</h2>
-            <Button mt="md" onClick={() => { setFormMarket({}); setOpenedMarket(true); }}>Ajouter un marché</Button>
-            {markets.map((m) => (
-                <Card key={m._id} mt="md" shadow='sm'>
-                    <b>{m.name}</b> - {m.description} ({m.status})
-                    <Group mt="sm">
-                        <Button size="xs" onClick={() => { setFormMarket(m); setOpenedMarket(true); }}>Modifier</Button>
-                        <Button size="xs" color="red" onClick={() => deleteMarket(m._id)}>Supprimer</Button>
-                    </Group>
-                </Card>
-            ))}
+            <Group mt="md">
+            <Button onClick={() => navigate("/admin/markets")}>Voir tous les marchés</Button>
+            <Button onClick={() => navigate("/admin/markets/create")}>Ajouter un marché</Button>
+            </Group>
+              
 
             <h2>Candidatures</h2>
             <Select 
@@ -179,7 +157,7 @@ export default function AdminDashboard() {
                 </Card>
             ))}
 
-            {/* modal market */}
+          
 
             {/* modal user */}
             <Modal opened={openedUser} onClose={() => setOpenedUser(false)} title="Modifier l'utilisateur">
@@ -201,28 +179,7 @@ export default function AdminDashboard() {
                 
                 <Button mt="md" onClick={saveUser}>Enregistrer</Button>
             </Modal>
-
-            {/* modal market */}
-            <Modal opened={openedMarket} onClose={() => setOpenedMarket(false)} title="Modifier le marché">
-                <TextInput
-                    label="Nom"
-                    value={formMarket.name || ''}
-                    onChange={(e) => setFormMarket({ ...formMarket, name: e.target.value })}
-                />
-                <TextInput
-                    label="Description"
-                    value={formMarket.description || ''}
-                    onChange={(e) => setFormMarket({ ...formMarket, description: e.target.value })}
-                />
-                <Select
-                    label="Statut"
-                    data={['Ouvert', 'Fermé']}
-                    value={formMarket.status || ''}
-                    onChange={(value) => setFormMarket({ ...formMarket, status: value })}
-                />
-                
-                <Button mt="md" onClick={saveMarket}>Enregistrer</Button>
-            </Modal>
+             
 
         </>
     );
