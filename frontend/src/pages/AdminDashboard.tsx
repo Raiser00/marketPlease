@@ -9,13 +9,7 @@ export default function AdminDashboard() {
     const [candidats, setCandidats] = useState<any[]>([]);
     const [selectedMarket, setSelectMarket] = useState<string | null>(null);
 
-    // modal
-    const [openedUser, setOpenedUser] = useState(false);
-    /* const [openedMarket, setOpenedMarket] = useState(false); */
 
-    // form states
-    const [formUser, setFormUser] = useState<any>({});
-    /* const [formMarket, setFormMarket] = useState<any>({}); */
 
     const token = localStorage.getItem("token");
     const navigate = useNavigate();
@@ -41,54 +35,7 @@ export default function AdminDashboard() {
     }
   };
 
-    // users
-    const deleteUser = async (id: string) => {
-    try {
-      await api.delete(`/users/${id}`, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
-      alert("Utilisateur supprimé");
-      fetchData();
-    } catch (err) {
-      console.error("Erreur suppression utilisateur :", err);
-      alert("Erreur lors de la suppression de l'utilisateur");
-    }
-  };
-
-    const saveUser = async () => {
-    try {
-      if (formUser._id) {
-        await api.put(`/users/${formUser._id}`, formUser, {
-          headers: { Authorization: `Bearer ${token}` }
-        });
-        alert("Utilisateur modifié");
-      } else {
-        await api.post(`/users`, formUser, {
-          headers: { Authorization: `Bearer ${token}` }
-        });
-        alert("Utilisateur ajouté");
-      }
-      setOpenedUser(false);
-      fetchData();
-    } catch (err) {
-      console.error("Erreur saveUser :", err);
-      alert("Erreur de l'enregistreement de l'utilisateur");
-    }
-  };
-
-    // markets
-    const deleteMarket = async (id: string) => {
-    try {
-      await api.delete(`/markets/${id}`, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
-      alert("Marché supprimé");
-      fetchData();
-    } catch (err) {
-      console.error("Erreur suppression marché :", err);
-      alert("Erreur lors de la suppression d'un marché");
-    }
-  };
+    
 
      
 
@@ -124,15 +71,10 @@ export default function AdminDashboard() {
     return (
         <>
             <h2>Utilisateurs</h2>
-            {users.map((u) => (
-                <Card key={u._id} mt="md" shadow='sm'>
-                    <b>{u.firstName} {u.lastName}</b> - {u.email} ({u.role})
-                    <Group mt="sm">
-                        <Button size="xs" onClick={() => { setFormUser(u); setOpenedUser(true); }}>Modifier</Button>
-                        <Button size="xs" color="red" onClick={() => deleteUser(u._id)}>Supprimer</Button>
-                    </Group>
-                </Card>
-            ))}
+            <Group mt="md">
+              <Button onClick={() => navigate("/admin/users")}>Voir tous les utilisateurs</Button>
+              <Button onClick={() => navigate("/admin/users/create")}>Ajouter un utilisateur</Button>
+            </Group>
 
             <h2>Marchés</h2>
             <Group mt="md">
@@ -159,27 +101,7 @@ export default function AdminDashboard() {
 
           
 
-            {/* modal user */}
-            <Modal opened={openedUser} onClose={() => setOpenedUser(false)} title="Modifier l'utilisateur">
-                <TextInput
-                    label="Prénom"
-                    value={formUser.firstName || ''}
-                    onChange={(e) => setFormUser({ ...formUser, firstName: e.target.value })}
-                />
-                <TextInput
-                    label="Nom"
-                    value={formUser.lastName || ''}
-                    onChange={(e) => setFormUser({ ...formUser, lastName: e.target.value })}
-                />
-                <TextInput
-                    label="Email"
-                    value={formUser.email || ''}
-                    onChange={(e) => setFormUser({ ...formUser, email: e.target.value })}
-                />
-                
-                <Button mt="md" onClick={saveUser}>Enregistrer</Button>
-            </Modal>
-             
+            
 
         </>
     );

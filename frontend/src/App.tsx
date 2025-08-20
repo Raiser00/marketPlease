@@ -14,6 +14,9 @@ import ForgotPassword from "./pages/ForgotPassword";
 import MarketsList from "./pages/MarketsList";
 import EditMarket from "./pages/EditMarket";
 import CreateMarket from "./pages/CreateMarket";
+import UserList from "./pages/UsersList";
+import CreateUser from "./pages/CreateUser";
+import EditUser from "./pages/EditUser";
 
 function App() {
     return (
@@ -30,6 +33,9 @@ function App() {
               <Route path="/markets" element={<Markets />} />
               <Route path="/my-applications" element={<MyApplications />} />
               <Route path="/admin" element={<AdminDashboard />} />
+              <Route path="/admin/users" element={<UserList />} />
+              <Route path="/admin/users/create" element={<CreateUser />} />
+              <Route path="/admin/users/:id/edit" element={<EditUser />} />
               <Route path="/admin/markets" element={<MarketsList />} />
               <Route path="/admin/markets/create" element={<CreateMarket />} />
               <Route path="/admin/markets/:id/edit" element={<EditMarket />} />
