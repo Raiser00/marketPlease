@@ -7,6 +7,7 @@ import axios from "axios";
 
 export default function EditMarket() {
   const { id } = useParams();
+  console.log("EditMarket id:", id);
   const navigate = useNavigate();
   const [market, setMarket] = useState({ name: "", description: "", eventDate: "" });
 
@@ -18,7 +19,11 @@ export default function EditMarket() {
 
   const handleSubmit = async (e: any) => {
     e.preventDefault();
-    await axios.put(`http://localhost:5000/api/markets/${id}`, market);
+    const token = localStorage.getItem("token");
+
+    await axios.put(`http://localhost:5000/api/markets/${id}`, market, {
+      headers: { Authorization: `Bearer ${token}`}
+    });
     navigate("/admin/markets");
   };
 
