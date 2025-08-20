@@ -22,12 +22,20 @@ export default function Layout() {
               <Link to="/markets">🛒 Marchés</Link>
               
               {token && (
-                role === "admin" 
-                  ? <Link to="/admin">👤 Profil</Link> 
-                  : <Link to="/profile">👤 Profil</Link>
-              )}
+                <>
+                  {/* Profil normal ou admin */}
+                  {role === "admin" ? (
+                    <Link to="/profile">👤 Profil</Link>
+                  ) : (
+                    <Link to="/profile">👤 Profil</Link>
+                  )}
 
-              {role === "admin" && <Link to="/admin">🛠️ Admin</Link>}
+                  {/* Bouton Admin visible uniquement pour les admins */}
+                  {role === "admin" &&
+                    <Link to="/admin">🛠️ Admin</Link>
+                  }
+                </>
+              )}
             </Group>
 
             <Group gap="sm">
@@ -55,6 +63,14 @@ export default function Layout() {
           <Outlet />
         </Container>
       </AppShell.Main>
+
+      <AppShell.Footer>
+        <Container size="sm" style={{ textAlign: "center" }}>
+          <Button variant="subtle" onClick={() => navigate(-1)}>
+            ⬅️ Retour
+          </Button>
+        </Container>
+      </AppShell.Footer>
     </AppShell>
   );
 }
