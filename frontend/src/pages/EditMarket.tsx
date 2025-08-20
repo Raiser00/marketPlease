@@ -7,6 +7,7 @@ import axios from "axios";
 
 export default function EditMarket() {
   const { id } = useParams();
+  console.log("EditMarket id:", id);
   const navigate = useNavigate();
   const [market, setMarket] = useState({ name: "", description: "", eventDate: "" });
 
