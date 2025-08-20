@@ -1,8 +1,7 @@
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import api from '../services/api';
 import { Card, Button, Select, TextInput, Modal, Group, Drawer } from '@mantine/core';
-import { set } from 'zod';
-
 
 export default function AdminDashboard() {
     const [users, setUsers] = useState<any[]>([]);
@@ -12,13 +11,14 @@ export default function AdminDashboard() {
 
     // modal
     const [openedUser, setOpenedUser] = useState(false);
-    const [openedMarket, setOpenedMarket] = useState(false);
+    /* const [openedMarket, setOpenedMarket] = useState(false); */
 
     // form states
     const [formUser, setFormUser] = useState<any>({});
-    const [formMarket, setFormMarket] = useState<any>({});
+    /* const [formMarket, setFormMarket] = useState<any>({}); */
 
     const token = localStorage.getItem("token");
+    const navigate = useNavigate();
 
     useEffect(() => {
         fetchData();
@@ -31,9 +31,13 @@ export default function AdminDashboard() {
       });
       setUsers(u.data);
 
-      
+      const m = await api.get('/markets', {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      setMarkets(m.data);
     } catch (err) {
       console.error("Erreur fetchData :", err);
+      alert("Impossible de charger");
     }
   };
 
@@ -43,9 +47,11 @@ export default function AdminDashboard() {
       await api.delete(`/users/${id}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
+      alert("Utilisateur supprimé");
       fetchData();
     } catch (err) {
       console.error("Erreur suppression utilisateur :", err);
+      alert("Erreur lors de la suppression de l'utilisateur");
     }
   };
 
@@ -55,47 +61,65 @@ export default function AdminDashboard() {
         await api.put(`/users/${formUser._id}`, formUser, {
           headers: { Authorization: `Bearer ${token}` }
         });
+        alert("Utilisateur modifié");
       } else {
         await api.post(`/users`, formUser, {
           headers: { Authorization: `Bearer ${token}` }
         });
+        alert("Utilisateur ajouté");
       }
       setOpenedUser(false);
       fetchData();
     } catch (err) {
       console.error("Erreur saveUser :", err);
+      alert("Erreur de l'enregistreement de l'utilisateur");
     }
   };
 
     // markets
     const deleteMarket = async (id: string) => {
-        await api.delete(`/markets/${id}`);
-        fetchData();
-    };
+    try {
+      await api.delete(`/markets/${id}`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      alert("Marché supprimé");
+      fetchData();
+    } catch (err) {
+      console.error("Erreur suppression marché :", err);
+      alert("Erreur lors de la suppression d'un marché");
+    }
+  };
 
-    const saveMarket = async () => {
-        if (formMarket._id) {
-            await api.put(`/markets/${formMarket._id}`, formMarket);
-        } else {
-            await api.post('/markets', formMarket);
-        }
-        setOpenedMarket(false);
-        fetchData();
-    };
+     
 
     // application (candidatures)
     const voirCandidats = async (marketId: string) => {
-        setSelectMarket(marketId);
-        const res = await api.get(`/applications/for-market/${marketId}`);
-        setCandidats(res.data);
-    };
+    try {
+      setSelectMarket(marketId);
+      const res = await api.get(`/applications/for-market/${marketId}`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      setCandidats(res.data);
+    } catch (err) {
+      console.error("Erreur voirCandidats :", err);
+      alert("Impossible de charger les candidatures pour ce marché")
+    }
+  };
 
     const attribuer = async (appId: string) => {
-        await api.put(`/applications/${appId}/accepter`);
-        alert('Candidature acceptée');
-        setCandidats([]);
-        setSelectMarket(null);
+    try {
+      await api.put(`/applications/${appId}/accepter`, {}, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      alert('Candidature acceptée');
+      setCandidats([]);
+      setSelectMarket(null);
+      fetchData();
+    } catch (err) {
+      console.error("Erreur attribution candidature :", err);
+      alert("Erreur lors de l'atribution de la candidature");
     }
+  };
 
     return (
         <>
@@ -111,16 +135,11 @@ export default function AdminDashboard() {
             ))}
 
             <h2>Marchés</h2>
-            <Button mt="md" onClick={() => { setFormMarket({}); setOpenedMarket(true); }}>Ajouter un marché</Button>
-            {markets.map((m) => (
-                <Card key={m._id} mt="md" shadow='sm'>
-                    <b>{m.name}</b> - {m.description} ({m.status})
-                    <Group mt="sm">
-                        <Button size="xs" onClick={() => { setFormMarket(m); setOpenedMarket(true); }}>Modifier</Button>
-                        <Button size="xs" color="red" onClick={() => deleteMarket(m._id)}>Supprimer</Button>
-                    </Group>
-                </Card>
-            ))}
+            <Group mt="md">
+            <Button onClick={() => navigate("/admin/markets")}>Voir tous les marchés</Button>
+            <Button onClick={() => navigate("/admin/markets/create")}>Ajouter un marché</Button>
+            </Group>
+              
 
             <h2>Candidatures</h2>
             <Select 
@@ -138,10 +157,10 @@ export default function AdminDashboard() {
                 </Card>
             ))}
 
-            {/* modal market */}
+          
 
             {/* modal user */}
-            <Drawer opened={openedUser} onClose={() => setOpenedUser(false)} title="Modifier l'utilisateur">
+            <Modal opened={openedUser} onClose={() => setOpenedUser(false)} title="Modifier l'utilisateur">
                 <TextInput
                     label="Prénom"
                     value={formUser.firstName || ''}
@@ -159,29 +178,8 @@ export default function AdminDashboard() {
                 />
                 
                 <Button mt="md" onClick={saveUser}>Enregistrer</Button>
-            </Drawer>
-
-            {/* modal market */}
-            <Drawer opened={openedMarket} onClose={() => setOpenedMarket(false)} title="Modifier le marché">
-                <TextInput
-                    label="Nom"
-                    value={formMarket.name || ''}
-                    onChange={(e) => setFormMarket({ ...formMarket, name: e.target.value })}
-                />
-                <TextInput
-                    label="Description"
-                    value={formMarket.description || ''}
-                    onChange={(e) => setFormMarket({ ...formMarket, description: e.target.value })}
-                />
-                <Select
-                    label="Statut"
-                    data={['Ouvert', 'Fermé']}
-                    value={formMarket.status || ''}
-                    onChange={(value) => setFormMarket({ ...formMarket, status: value })}
-                />
-                
-                <Button mt="md" onClick={saveMarket}>Enregistrer</Button>
-            </Drawer>
+            </Modal>
+             
 
         </>
     );

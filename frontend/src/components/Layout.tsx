@@ -16,37 +16,43 @@ export default function Layout() {
     <AppShell padding="md" header={{ height: 60 }}>
       <AppShell.Header>
         <Container size="sm" style={{ textAlign: "center" }}>
-        <Group justify="space-between" align="center" h={60} px="md">
-          <Group gap="md" align="center">
-            <Link to="/">🏠 Accueil</Link>
-            <Link to="/markets">🛒 Marchés</Link>
-            {token && <Link to="/profile">👤 Profil</Link>}
-            {role === "admin" && <Link to="/admin">🛠️ Admin</Link>}
-          </Group>
+          <Group justify="space-between" align="center" h={60} px="md">
+            <Group gap="md" align="center">
+              <Link to="/">🏠 Accueil</Link>
+              <Link to="/markets">🛒 Marchés</Link>
+              
+              {token && (
+                role === "admin" 
+                  ? <Link to="/admin">👤 Profil</Link> 
+                  : <Link to="/profile">👤 Profil</Link>
+              )}
 
-          <Group gap="sm">
-            {!token ? (
-              <>
-                <Button variant="light" onClick={() => navigate("/login")}>
-                  Connexion
+              {role === "admin" && <Link to="/admin">🛠️ Admin</Link>}
+            </Group>
+
+            <Group gap="sm">
+              {!token ? (
+                <>
+                  <Button variant="light" onClick={() => navigate("/login")}>
+                    Connexion
+                  </Button>
+                  <Button onClick={() => navigate("/register")}>
+                    S'inscrire
+                  </Button>
+                </>
+              ) : (
+                <Button variant="outline" onClick={logout}>
+                  Se déconnecter
                 </Button>
-                <Button onClick={() => navigate("/register")}>
-                  S'inscrire
-                </Button>
-              </>
-            ) : (
-              <Button variant="outline" onClick={logout}>
-                Se déconnecter
-              </Button>
-            )}
+              )}
+            </Group>
           </Group>
-        </Group>
         </Container>
       </AppShell.Header>
 
       <AppShell.Main>
         <Container size="lg" mt="md">
-        <Outlet />
+          <Outlet />
         </Container>
       </AppShell.Main>
     </AppShell>

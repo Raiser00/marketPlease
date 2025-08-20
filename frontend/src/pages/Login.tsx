@@ -21,11 +21,15 @@ export default function Login() {
     try {
       const res = await api.post("/auth/login", values);
 
-      const { token } = res.data; // user est dans le token, pas besoin de res.data.user
+      const { token, user } = res.data; // user est dans le token, pas besoin de res.data.user
       login(token);
 
       // redirection selon rôle (décodé dans AuthContext ou backend)
-      navigate("/profile");
+      if (user.role === "admin") {
+          navigate("/admin");
+      } else {
+          navigate("/profile");
+      }
     } catch (err: any) {
       setMessage(err.response?.data?.message || "Erreur de connexion");
       setMessageType("error");
