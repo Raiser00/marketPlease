@@ -6,7 +6,7 @@ export default function MyApplications() {
     const [apps, setApps] = useState<any[]>([]);
 
     useEffect(() => {
-        api.get('/applications/me').then(res => setApps(res.data));
+        api.get('/applications/mes-candidatures').then(res => setApps(res.data));
     }, []);
 
     const retirer = async (id: string) => {
@@ -18,7 +18,9 @@ export default function MyApplications() {
         <>
             {apps.map(app => (
                 <Card key={app._id} me="md">
-                    <strong>Marché :</strong> {app.marketId?.name} <br />
+                    <strong>Marché :</strong> {app.market.name} <br />
+                    <strong>Description du marché :</strong> {app.market.description} <br />
+                    <strong>Date de l'évenement :</strong> {app.market.eventDate} <br />
                     <strong>Statut :</strong> {app.status}
                     {app.status === 'pending' && (
                         <Button color="red" mt="md" onClick={() => retirer(app._id)}>
