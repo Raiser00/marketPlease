@@ -84,20 +84,10 @@ export default function AdminDashboard() {
               
 
             <h2>Candidatures</h2>
-            <Select 
-                data={markets.map((m) => ({ value: m._id, label: m.name}))}
-                placeholder="Selectionner un marché"
-                value={selectedMarket}
-                onChange={(id) => voirCandidats(id!)}
-            />
-            {candidats.map((app) => (
-                <Card key={app._id} mt="md" shadow="sm">
-                    {app.userId?.firstName} {app.userId?.lastName} - {app.status}
-                    <Button color="green" mt="md" onClick={() => attribuer(app._id)}>
-                        Attribuer
-                    </Button>
-                </Card>
-            ))}
+            <Group mt="md">
+              <Button onClick={() => navigate("/admin/applications")}>Voir les candidatures en attente</Button>
+            </Group>
+           
 
           
 

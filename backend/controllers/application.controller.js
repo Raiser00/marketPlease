@@ -8,7 +8,7 @@ exports.postuler = async (req, res) => {
     if (!market) return res.status(404).json({ message: 'Marché introuvable' });
     if (market.status !== 'open') return res.status(400).json({ message: 'Marché fermé aux candidatures' });
 
-    const existing = await Application.findOne({ market: marketId, user: req.user.id });
+    const existing = await Application.findOne({ market: marketId, user: req.user._id });
     if (existing) return res.status(400).json({ message: 'Vous avez déjà postulé à ce marché' });
 
     const app = await Application.create({
@@ -29,7 +29,7 @@ exports.retirer = async (req, res) => {
 };
 
 exports.mesCandidatures = async (req, res) => {
-    const apps = await Application.find({ userId: req.user._id }).populate('market', 'name description status evenDate');
+    const apps = await Application.find({ userId: req.user._id }).populate('market', 'name description status eventDate');
     res.json(apps);
 };
 
@@ -61,6 +61,6 @@ exports.getByMarket = async (req, res) => {
     const { marketId } = req.params;
     const apps = await Application.find({ marketId })
         .populate('userId', 'firstName lastName email')
-        .populate('marketId', 'name');
+        .populate('marketId', 'name description eventDate status');
     res.json(apps);
 };

@@ -17,6 +17,7 @@ import CreateMarket from "./pages/CreateMarket";
 import UserList from "./pages/UsersList";
 import CreateUser from "./pages/CreateUser";
 import EditUser from "./pages/EditUser";
+import ApplicationManagement from "./pages/ApplicationManagement";
 
 function App() {
     return (
@@ -39,6 +40,7 @@ function App() {
               <Route path="/admin/markets" element={<MarketsList />} />
               <Route path="/admin/markets/create" element={<CreateMarket />} />
               <Route path="/admin/markets/:id/edit" element={<EditMarket />} />
+              <Route path="/admin/applications" element={<ApplicationManagement />} />
               <Route path="/reset-password/:token" element={<ResetPassword />} />
               <Route path="/forgot-password" element={<ForgotPassword />} />
             </Route>
