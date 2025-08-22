@@ -17,7 +17,7 @@ export default function HomePage() {
             }}
         >
             <Title order={1} mb="md">
-                Bienvenue sur MarketPlease
+                Bienvenue sur marketPlease
             </Title>
             <Text size="lg" mb="xl">
                 Gérez vos marchés facilement et rapidement !
