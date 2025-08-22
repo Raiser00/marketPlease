@@ -29,7 +29,9 @@ export default function ApplicationManagement() {
   const loadApps = async () => {
     try {
       const res = await api.get('/applications'); // backend : renvoyer toutes les candidatures
-      setApps(res.data);
+      const appsData = res.data as Application[];
+      const cleanApps = appsData.filter(app => app.user);
+      setApps(cleanApps);
     } catch (err) {
       console.error('Erreur chargement candidatures admin', err);
     } finally {
@@ -67,9 +69,9 @@ export default function ApplicationManagement() {
       <SimpleGrid cols={{ base: 1, sm: 2 }} spacing="md">
         {apps.map(app => (
           <Card key={app._id} shadow="sm" radius="md" withBorder>
-            <Title order={4}>{app.user.firstName} {app.user.lastName}</Title>
-            <Text size="sm" c="dimmed">{app.user.email}</Text>
-            <Text size="sm" c="dimmed">Marché: {app.market ? app.market.name : 'aucun marché'}</Text>
+            <Title order={4}>{app.user?.firstName || "N/A"} {app.user?.lastName}</Title>
+            <Text size="sm" c="dimmed">{app.user?.email}</Text>
+            <Text size="sm" c="dimmed">Marché: {app.market ? app.market?.name : 'aucun marché'}</Text>
             <Badge color={app.status === 'accepted' ? 'green' : app.status === 'pending' ? 'yellow' : 'red'}>
               {app.status}
             </Badge>

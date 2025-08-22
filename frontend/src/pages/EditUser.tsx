@@ -55,6 +55,12 @@ export default function EditUser() {
             onChange={(e) => setUser({ ...user, phone: e.target.value })}
             mb="sm"
         />
+        <TextInput
+            label="Mot de passe"
+            value={user.password || ""}
+            onChange={(e) => setUser({ ...user, password: e.target.value})}
+            mb="sm"
+        />
         <Select
           label="Rôle"
           data={[

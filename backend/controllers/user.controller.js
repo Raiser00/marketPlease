@@ -1,4 +1,5 @@
 const User = require('../models/User');
+const bcrypt = require('bcryptjs');
 
 exports.getAllUsers = async (req, res) => 
 {
@@ -30,6 +31,8 @@ exports.createUser = async (req, res) =>
                 return res.status(400).json({ message: "un utiisateur avec cet email existe"});
             }
 
+            const hashedPassword = await bcrypt.hash(password, 10);
+
             const user = new User
             (
                 {
@@ -37,12 +40,13 @@ exports.createUser = async (req, res) =>
                     lastName,
                     email,
                     phone,
+                    passwordHash: hashedPassword,
                     role : role || "gestionnaire",
+                    verified: true
                 }
             );
 
-            const bcrypt = require("bcryptjs");
-            user.passwordHash = await bcrypt.hash(password, 10);
+            
 
             await user.save();
             res.status(201).json({ message: "utilisateur créé", user: { ...user.toObject(), passwordHash: undefined } });

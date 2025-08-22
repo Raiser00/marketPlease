@@ -72,8 +72,11 @@ export default function UserList() {
                       color="red"
                       variant="light"
                       onClick={() =>
-                        axios.delete(`http://localhost:5000/api/users/${u._id}`)
+                        axios.delete(`http://localhost:5000/api/users/${u._id}`, {
+                          headers: { Authorization: `Bearer ${token}` }
+                        })
                           .then(() => setUsers((prev) => prev.filter((x) => x._id !== u._id)))
+                          .catch((err) => console.error("erreur suppression"))
                       }
                     >
                       Supprimer
