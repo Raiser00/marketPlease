@@ -21,7 +21,7 @@ export default function Markets() {
 
     const apply = async (marketId: string) => {
         try {
-            await api.post(`/applications/${marketId}`);
+            await api.post(`/applications/${marketId}`, { marketId });
             alert('Candidature envoyée avec succès !');
         } catch (e: any) {
             console.error('Erreur lors de la candidature:', e);
