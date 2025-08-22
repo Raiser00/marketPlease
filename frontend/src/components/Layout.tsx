@@ -28,7 +28,7 @@ export default function Layout() {
                   {role === "admin" ? (
                     <Link to="/profile">👤 Profil</Link>
                   ) : (
-                    <Link to="/profile">👤 Profil</Link>
+                    <Link to="/admin">👤 Profil</Link>
                   )}
 
                   {/* Bouton Admin visible uniquement pour les admins */}
