@@ -3,22 +3,38 @@ const Market = require('../models/Market');
 const User = require(('../models/User'));
 
 exports.postuler = async (req, res) => {
-    const marketId = req.params.marketId;
+    try {
+        const { marketId } = req.body;
 
-    const market = await Market.findById(marketId);
-    if (!market) return res.status(404).json({ message: 'Marché introuvable' });
-    if (market.status !== 'open') return res.status(400).json({ message: 'Marché fermé aux candidatures' });
+        // Vérifier si l'utilisateur a déjà ce marché attribué
+        const user = await User.findById(req.user.id);
+        if (user.markets.includes(marketId)) {
+            return res.status(400).json({ message: "Vous avez déjà ce marché attribué." });
+        }
 
-    const existing = await Application.findOne({ market: marketId, user: req.user._id });
-    if (existing) return res.status(400).json({ message: 'Vous avez déjà postulé à ce marché' });
+        // Vérifier si une candidature existe déjà
+        const existingApp = await Application.findOne({
+            user: req.user.id,
+            market: marketId
+        });
 
-    const app = await Application.create({
-      market: marketId,
-      user: req.user.id,
-      status: 'pending',
-    });
+        if (existingApp) {
+            return res.status(400).json({ message: "Vous avez déjà postulé à ce marché." });
+        }
 
-  res.status(201).json(app);
+        // Sinon créer une nouvelle candidature
+        const app = new Application({
+            user: req.user.id,
+            market: marketId,
+            status: "pending"
+        });
+
+        await app.save();
+        res.json(app);
+    } catch (error) {
+        console.error("Erreur postuler:", error);
+        res.status(500).json({ message: "Erreur serveur" });
+    }
 };
 
 exports.retirer = async (req, res) => {
