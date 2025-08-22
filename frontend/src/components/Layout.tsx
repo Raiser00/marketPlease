@@ -21,6 +21,7 @@ export default function Layout() {
               <Link to="/">🏠 Accueil</Link>
               <Link to="/markets">🛒 Marchés</Link>
               
+              
               {token && (
                 <>
                   {/* Profil normal ou admin */}
@@ -36,6 +37,8 @@ export default function Layout() {
                   }
                 </>
               )}
+
+              <Link to="/myMarkets"> 🎯 Mes marchés attribués</Link>
             </Group>
 
             <Group gap="sm">

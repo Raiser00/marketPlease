@@ -18,6 +18,7 @@ import UserList from "./pages/UsersList";
 import CreateUser from "./pages/CreateUser";
 import EditUser from "./pages/EditUser";
 import ApplicationManagement from "./pages/ApplicationManagement";
+import UserMarkets from "./pages/UserMarkets";
 
 function App() {
     return (
@@ -25,13 +26,13 @@ function App() {
       <BrowserRouter>
       <AuthProvider>
           <Routes>
-            {/* toutes les routes passent par Layout */}
             <Route element={<Layout />}>
               <Route index element={<HomePage />} />
               <Route path="/login" element={<Login />} />
               <Route path="/register" element={<Register />} />
               <Route path="/profile" element={<Profile />} />
               <Route path="/markets" element={<Markets />} />
+              <Route path="/myMarkets" element={<UserMarkets />} />
               <Route path="/my-applications" element={<MyApplications />} />
               <Route path="/admin" element={<AdminDashboard />} />
               <Route path="/admin/users" element={<UserList />} />
