@@ -19,7 +19,7 @@ Permet de lister les marchés, gérer les utilisateurs, postuler à un marché e
 - Liste et détails des marchés  
 - Gestion des utilisateurs (CRUD)  
 - Postulation à un marché  
-- Assignation d’un marché à un utilisateur (en développement)  
+- Assignation d’un marché à un utilisateur (en développement => fonctionnel dans la branch develop => à migrer)  
 - Interface responsive et stylisée avec Mantine  
 
 ---
