@@ -12,6 +12,8 @@ const Application = require('../models/Application');
 router.post('/:marketId', auth.isUser, ctrl.postuler);
 router.delete('/:id', auth.isUser, ctrl.retirer);
 router.get('/mes-candidatures', auth.isUser, ctrl.mesCandidatures);
+router.get('/myMarkets', auth.isUser, ctrl.getMyAssignedMarkets);
+router.post('/leave/:id', auth.isUser, ctrl.leaveMarket);
 
 router.get('/', auth.isAdmin, async (req, res) =>
 {

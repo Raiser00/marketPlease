@@ -50,6 +50,43 @@ exports.mesCandidatures = async (req, res) => {
     res.json(apps);
 };
 
+exports.getMyAssignedMarkets = async (req, res) => {
+  try {
+    const user = await User.findById(req.user.id).populate('markets');
+    if (!user) {
+      return res.status(404).json({ message: 'Utilisateur non trouvé' });
+    }
+
+    // Retourner seulement les marchés
+    res.json(user.markets || []);
+  } catch (error) {
+    console.error("Erreur getMyAssignedMarkets:", error);
+    res.status(500).json({ message: 'Erreur serveur' });
+  }
+};
+
+
+
+exports.leaveMarket = async (req, res) =>
+{
+    try
+    {
+        const { id } = req.params;
+        const app = await Application.findOneAndUpdate
+        (
+            { market: id, user: req.user.id, status: 'accepted' },
+            { status: 'cancelled' },
+            { new: true}
+        );
+        if (!app) return res.status(404).json({ message: "marché non trouvé" });
+        res.json({ message: "vous avez quitté ce marché" });
+    } catch (error)
+    {
+        console.error("erreur leaveMarket", error);
+        res.status(500).json({ message: "erreur serveur"});
+    }
+};
+
 exports.forMarket = async (req, res) => {
     const { marketId } = req.params;
     const apps = await Application.find({ market: marketId }).populate('user', 'firstName lastName email');
