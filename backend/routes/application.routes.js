@@ -28,22 +28,7 @@ router.get('/', auth.isAdmin, async (req, res) =>
     }
 });
 
-router.post('/:id/accept', auth.isAdmin, async (req, res) =>
-{
-    try
-    {
-        const app = await Application.findById(req.params.id);
-        if (!app) return res.status(404).json({ message: 'Candidature introuvable'});
-
-        app.status = 'accepted';
-        await app.save();
-        res.json(app);
-    } catch (err)
-    {
-        console.error(err);
-        res.status(500).json({ message: 'erreur serveur' });
-    }
-});
+router.post('/:id/accept', auth.isAdmin, ctrl.attribuer);
 
 router.post('/:id/reject', auth.isAdmin, async (req, res) =>
 {

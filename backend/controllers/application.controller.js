@@ -1,5 +1,6 @@
 const Application = require('../models/Application');
 const Market = require('../models/Market');
+const User = require(('../models/User'));
 
 exports.postuler = async (req, res) => {
     const marketId = req.params.marketId;
@@ -29,7 +30,7 @@ exports.retirer = async (req, res) => {
 };
 
 exports.mesCandidatures = async (req, res) => {
-    const apps = await Application.find({ userId: req.user._id }).populate('market', 'name description status eventDate');
+    const apps = await Application.find({ user: req.user._id }).populate('market', 'name description status eventDate');
     res.json(apps);
 };
 
@@ -40,21 +41,44 @@ exports.forMarket = async (req, res) => {
 }
 
 exports.attribuer = async (req, res) => {
-    const { id } = req.params; // application id
-    const selected = await Application.findById(id);
-    if (!selected) return res.status(404).json({ message: 'Candidature introuvable' });
+    try {
+        const { id } = req.params; // id de l'application
+        const selected = await Application.findById(id);
+        if (!selected) return res.status(404).json({ message: 'Candidature introuvable' });
 
-      // accepte celle-ci
-    await Application.findByIdAndUpdate(id, { status: 'accepted' });
+        console.log("debug selected:", selected);
 
-    await Application.updateMany(
-      { market: selected.market, _id: { $ne: id } },
-      { status: 'rejected' }
-    );
+        // accepte celle-ci
+        await Application.findByIdAndUpdate(id, { status: 'accepted' });
 
-    await Market.findByIdAndUpdate(selected.market, { assignedTo: selected.user });
+        // rejette toutes les autres
+        await Application.updateMany(
+            { market: selected.market, _id: { $ne: id } },
+            { status: 'rejected' }
+        );
 
-    res.json({ message: 'Candidature attribuée' });
+        console.log("debug attribuer → id:", id);
+        console.log("debug attribuer → selected.market:", selected.market);
+        console.log("debug attribuer → selected.user:", selected.user);
+
+        // met à jour le marché
+        const updatedMarket = await Market.findByIdAndUpdate(
+            selected.market, 
+            { assignedTo: selected.user },
+            { new: true }
+        );
+
+        // met à jour le user
+        await User.findByIdAndUpdate(selected.user, { 
+        $push: { markets: selected.market } 
+        });
+
+        res.json({ message: 'Candidature attribuée' });
+    } catch (err) 
+    {
+        console.error("erreur attribuer", err);
+        res.status(500).json({ message: 'erreur serveur', error: err.message});
+    }
 };
 
 exports.getByMarket = async (req, res) => {

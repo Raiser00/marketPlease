@@ -38,17 +38,22 @@ export default function ApplicationManagement() {
   };
 
   const handleDecision = async (id: string, accept: boolean) => {
-    try {
-      await api.post(`/applications/${id}/${accept ? 'accept' : 'reject'}`);
+  try {
+    if (accept) {
+      await api.post(`/applications/${id}/accept`);
+      await loadApps(); // recharge toutes les candidatures pour voir les changements
+    } else {
+      await api.post(`/applications/${id}/reject`);
       setApps(prev =>
         prev.map(app =>
-          app._id === id ? { ...app, status: accept ? 'accepted' : 'rejected' } : app
+          app._id === id ? { ...app, status: 'rejected' } : app
         )
       );
-    } catch (err) {
-      console.error('Erreur décision candidature', err);
     }
-  };
+  } catch (err) {
+    console.error('Erreur décision candidature', err);
+  }
+};
 
   useEffect(() => {
     loadApps();
@@ -64,7 +69,7 @@ export default function ApplicationManagement() {
           <Card key={app._id} shadow="sm" radius="md" withBorder>
             <Title order={4}>{app.user.firstName} {app.user.lastName}</Title>
             <Text size="sm" c="dimmed">{app.user.email}</Text>
-            <Text size="sm" c="dimmed">Marché: {app.market.name}</Text>
+            <Text size="sm" c="dimmed">Marché: {app.market ? app.market.name : 'aucun marché'}</Text>
             <Badge color={app.status === 'accepted' ? 'green' : app.status === 'pending' ? 'yellow' : 'red'}>
               {app.status}
             </Badge>
